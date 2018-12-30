@@ -2,101 +2,93 @@ const SlackBot = require('slackbots');
 const axios = require('axios');
 
 const bot = new SlackBot({
-    token: 'xoxb-512921113825-512789053568-zS2MCRX7QoHJfvFJVhTQQaFv',
-    name: 'Ytumamatambienbot'
+  token: 'xoxb-512921113825-512789053568-pXt2pZs42trMO0oAQk0HD00T',
+  name: 'jokebot'
 });
 
-//START THE BOT UP
+// Start Handler
 bot.on('start', () => {
-    const params = {
-        icon_emoji: ':smiley:'
-    }
+  const params = {
+    icon_emoji: ':smiley:'
+  };
 
-    bot.postMessageToChannel(
-        'general',
-        'The cohort clown is here!',
-        params
-    );
+  bot.postMessageToChannel(
+    'general',
+    'Get Ready To Laugh With @Jokebot!',
+    params
+  );
 });
 
-//ERROR HANDLER
-bot.on('error', (err) => console.log(err));
+// Error Handler
+bot.on('error', err => console.log(err));
 
-//MESSAGE HANDLER
-bot.on('mesage', (data) => {
-    if (data.type !== 'message') {
-        return;
-    }
-    handleMessage(data.text);
+// Message Handler
+bot.on('message', data => {
+  if (data.type !== 'message') {
+    return;
+  }
+
+  handleMessage(data.text);
 });
 
-//DATA RESPONSE
+// Respons to Data
 function handleMessage(message) {
-    if (message.includes(' chucknorris')) {
-        chuckJoke();
-    } else if (message.includes(' yomomma')) {
-        yomommajoke()
-    } else if (message.includes(' random')) {
-        randomjoke()
-    } else if (message.includes(' help')) {
-        runHelp();
-    }
+  if (message.includes(' chucknorris')) {
+    chuckJoke();
+  } else if (message.includes(' yomama')) {
+    yoMamaJoke();
+  } else if (message.includes(' random')) {
+    randomJoke();
+  } else if (message.includes(' help')) {
+    runHelp();
+  }
 }
 
-//TELL A CHUCK NORRIS JOKE
-axios.get('http://api.icndb.com/jokes/random')
-    .then(res => {
-        const joke = res.data.value.joke;
-        
-        const params = {
-            icon_emoji: ':laughing:'
-        };
-        
-        bot.postMessageToChannel(
-            'general',
-            `${joke}`,
-            params
-        );
-        
-    });
+// Tell a Chuck Norris Joke
+function chuckJoke() {
+  axios.get('http://api.icndb.com/jokes/random').then(res => {
+    const joke = res.data.value.joke;
 
-//TELL A YO MOMMA JOKE
-axios.get('http://api.yomomma.info')
-.then(res => {
+    const params = {
+      icon_emoji: ':laughing:'
+    };
+
+    bot.postMessageToChannel('general', `Chuck Norris: ${joke}`, params);
+  });
+}
+
+// Tell a Yo Mama Joke
+function yoMamaJoke() {
+  axios.get('http://api.yomomma.info').then(res => {
     const joke = res.data.joke;
-    
+
     const params = {
-        icon_emoji: ':laughing:'
+      icon_emoji: ':laughing:'
     };
-    
-    bot.postMessageToChannel(
-        'general',
-        `${joke}`,
-        params
-    );
-    
-});
 
-//TELL A RANDOM JOKE
-function randomJoke() {
-    const rand = Math.floor(Math.random() * 2);
-    if (rand === 1) {
-        chuckJoke(); 
-    } else if (rand === 2) {
-        yomommajoke();
-    }
-
+    bot.postMessageToChannel('general', `Yo Mama: ${joke}`, params);
+  });
 }
 
-//SHOW COMMANDS FROM HELP
-function runHelp() {
-    const params = {
-        icon_emoji: ':question:'
-    };
+// Tell a Random Joke
+function randomJoke() {
+  const rand = Math.floor(Math.random() * 2) + 1;
+  if (rand === 1) {
+    chuckJoke();
+  } else if (rand === 2) {
+    yoMamaJoke();
+  }
+}
 
-    bot.postMessageToChannel(
-        'general',
-        `Type yomomma, random or chucknorris to get a joke `,
-        params
-    );
-};
+// Show Help Text
+function runHelp() {
+  const params = {
+    icon_emoji: ':question:'
+  };
+
+  bot.postMessageToChannel(
+    'general',
+    `Type @jokebot with either 'chucknorris', 'yomama' or 'random' to get a joke`,
+    params
+  );
+}
