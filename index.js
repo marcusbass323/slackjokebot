@@ -2,7 +2,7 @@ const SlackBot = require('slackbots');
 const axios = require('axios');
 
 const bot = new SlackBot({
-    token: 'xoxb-512921113825-512789053568-BxjRMKUf8Q9zgWfkXJIRjxun',
+    token: 'xoxb-512921113825-512789053568-zS2MCRX7QoHJfvFJVhTQQaFv',
     name: 'Ytumamatambienbot'
 });
 
@@ -32,12 +32,14 @@ bot.on('mesage', (data) => {
 
 //DATA RESPONSE
 function handleMessage(message) {
-    if (message.includes(' chuck norris')) {
+    if (message.includes(' chucknorris')) {
         chuckJoke();
     } else if (message.includes(' yomomma')) {
         yomommajoke()
     } else if (message.includes(' random')) {
         randomjoke()
+    } else if (message.includes(' help')) {
+        runHelp();
     }
 }
 
@@ -78,4 +80,23 @@ axios.get('http://api.yomomma.info')
 //TELL A RANDOM JOKE
 function randomJoke() {
     const rand = Math.floor(Math.random() * 2);
+    if (rand === 1) {
+        chuckJoke(); 
+    } else if (rand === 2) {
+        yomommajoke();
+    }
+
 }
+
+//SHOW COMMANDS FROM HELP
+function runHelp() {
+    const params = {
+        icon_emoji: ':question:'
+    };
+
+    bot.postMessageToChannel(
+        'general',
+        `Type yomomma, random or chucknorris to get a joke `,
+        params
+    );
+};
